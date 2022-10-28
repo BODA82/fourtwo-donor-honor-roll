@@ -1,1 +1,1 @@
-# fourtwo-donor-honor-roll
+# 42Web - Donor Honor Roll for WordPress 
