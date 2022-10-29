@@ -1,0 +1,70 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "9974632b25096800e5b4b3e75901c175",
+    "packages": [
+        {
+            "name": "mukto90/mdc-meta-box",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mukto90/mdc-meta-box.git",
+                "reference": "2b084dbe5e830b76da5eb355b75f9e1d478738b2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mukto90/mdc-meta-box/zipball/2b084dbe5e830b76da5eb355b75f9e1d478738b2",
+                "reference": "2b084dbe5e830b76da5eb355b75f9e1d478738b2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Nazmul Ahsan",
+                    "email": "n.mukto@gmail.com",
+                    "homepage": "https://nazmulahsan.me",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A PHP class to create custom meta boxes for WordPress' posts, pages or custom post types.",
+            "homepage": "https://github.com/mukto90/mdc-meta-box",
+            "keywords": [
+                "custom metabox",
+                "meta box",
+                "metabox"
+            ],
+            "support": {
+                "issues": "https://github.com/mukto90/mdc-meta-box/issues",
+                "source": "https://github.com/mukto90/mdc-meta-box/tree/master"
+            },
+            "time": "2019-01-21T06:30:03+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "mukto90/mdc-meta-box": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "2.1.0"
+}

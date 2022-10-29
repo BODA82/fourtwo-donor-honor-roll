@@ -1,0 +1,14 @@
+{
+    "name": "fourtwo/donor-honor-roll",
+    "description": "WordPress plugin for displaying a donor honor roll.",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Christopher Spires",
+            "email": "cspires@gmail.com"
+        }
+    ],
+    "require": {
+	     "mukto90/mdc-meta-box": "dev-master"
+    }
+}
