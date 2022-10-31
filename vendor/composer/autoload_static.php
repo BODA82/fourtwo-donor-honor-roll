@@ -6,6 +6,20 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit855029bc6c5f5367dbd3738b2f676792
 {
+    public static $prefixLengthsPsr4 = array (
+        'P' => 
+        array (
+            'ParseCsv\\' => 9,
+        ),
+    );
+
+    public static $prefixDirsPsr4 = array (
+        'ParseCsv\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/parsecsv/php-parsecsv/src',
+        ),
+    );
+
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'MDC_Meta_Box' => __DIR__ . '/..' . '/mukto90/mdc-meta-box/src/class.mdc-meta-box.php',
@@ -14,6 +28,8 @@ class ComposerStaticInit855029bc6c5f5367dbd3738b2f676792
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
+            $loader->prefixLengthsPsr4 = ComposerStaticInit855029bc6c5f5367dbd3738b2f676792::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit855029bc6c5f5367dbd3738b2f676792::$prefixDirsPsr4;
             $loader->classMap = ComposerStaticInit855029bc6c5f5367dbd3738b2f676792::$classMap;
 
         }, null, ClassLoader::class);

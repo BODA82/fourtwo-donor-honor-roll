@@ -9,6 +9,7 @@
         }
     ],
     "require": {
-	     "mukto90/mdc-meta-box": "dev-master"
+	     "mukto90/mdc-meta-box": "dev-master",
+        "parsecsv/php-parsecsv": "^1.3"
     }
 }
