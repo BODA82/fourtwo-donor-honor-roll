@@ -19,9 +19,9 @@ if (!function_exists('add_action')) {
 define('FOURTWO_DONOR_VER', '1.0.0');
 
 // Autoload Composer dependencies
-//require_once('vendor/autoload.php');
+require_once __DIR__ . '/vendor/autoload.php';
 
 // Plugin classes
-require_once('classes/class-plugin.php');
+require_once 'classes/class-plugin.php';
 
 new FourTwo_Donors();

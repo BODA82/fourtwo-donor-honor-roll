@@ -1,5 +1,5 @@
 <?php
-require_once(plugin_dir_path(__DIR__) . '/vendor/mukto90/mdc-meta-box/src/class.mdc-meta-box.php');
+require_once plugin_dir_path(__DIR__) . '/vendor/mukto90/mdc-meta-box/src/class.mdc-meta-box.php';
 
 class FourTwo_Donors {
 	
@@ -14,7 +14,11 @@ class FourTwo_Donors {
 		add_action('init', array($this, 'ctax'), 0);
 		add_filter('manage_edit-fourtwo_donor_dimensions_columns', array($this, 'dimension_columns'), 10, 1);
 		add_action('fourtwo_donor_dimensions_add_form_fields', array($this, 'add_header_field'), 10);
+		add_action('fourtwo_donor_dimensions_edit_form_fields', array($this, 'edit_header_field'), 10, 2);
+		add_action('created_fourtwo_donor_dimensions', array($this, 'save_term_field'));
+		add_action('edited_fourtwo_donor_dimensions', array($this, 'save_term_field'));
 		
+		// Custom meta box
 		add_action('admin_init', array($this, 'list_settings'), 10);
 		
 	}
@@ -29,9 +33,10 @@ class FourTwo_Donors {
 		
 		//echo '<pre>' . $hook . '</pre>';
 		
-		global $post;
+		global $post, $taxonomy;
 		
-		if ((($hook == 'post-new.php' || $hook == 'post.php') && $post->post_type == 'fourtwo_donor_lists') || $hook == 'edit-tags.php') {
+		if ((($hook == 'post-new.php' || $hook == 'post.php') && $post->post_type == 'fourtwo_donor_lists') || 
+			($hook == 'edit-tags.php' || ($hook == 'term.php' && $taxonomy == 'fourtwo_donor_dimensions'))) {
 				
 			wp_enqueue_style(
 				'select2', 
@@ -219,23 +224,58 @@ class FourTwo_Donors {
 	}
 	
 	/**
-	 * Add CSV header field to dimensions taxonomy
+	 * Add CSV header field to dimensions taxonomy edit-tags.php screen
 	 *
 	 * @since	1.0.0
 	 */
-	public function add_header_field($taxonomy) {
+	public function add_header_field() {
+			
+		$field = '<div class="form-field">';
+		$field .= '<label for="fourtwo_donor_list_csv_header">' . __('CSV Header Name') . '</label>';
+		$field .= '<input type="text" name="fourtwo_donor_list_csv_header" id="fourtwo_donor_list_csv_header" />';
+		$field .= '<p>' . __('Enter the header name exactly as it appears in the CSV for this dimension\'s column.') . '</p>';
+		$field .= '</div>';
 		
-		//if ($taxonomy == 'fourtwo_donor_dimensions') {
-			
-			$field = '<div class="form-field">';
-			$field .= '<label for="rudr_text">' . __('CSV Header Name') . '</label>';
-			$field .= '<input type="text" name="fourtwo_donor_list_csv_header" id="fourtwo_donor_list_csv_header" />';
-			$field .= '<p>' . __('Enter the header name exactly as it appears in the CSV for this dimension\'s column.') . '</p>';
-			$field .= '</div>';
-			
-			echo $field;
-			
-		//}
+		echo $field;
+		
+	}
+	
+	/**
+	 * Add CSV header field to dimensions taxonomy term.php screen
+	 *
+	 * @since	1.0.0
+	 * @param	object	$term		Current WP_Term taxonomy term object.
+	 * @param	string	$taxonomy	Current taxonomy slug.
+	 */
+	public function edit_header_field($term, $taxonomy) {
+		
+		$header_name = get_term_meta($term->term_id, 'fourtwo_donor_list_csv_header', true);
+		
+		$field = '<tr class="form-field">';
+		$field .= '<th><label for="fourtwo_donor_list_csv_header">' . __('CSV Header Name') . '</label></th>';
+		$field .= '<td>';
+		$field .= '<input name="fourtwo_donor_list_csv_header" id="fourtwo_donor_list_csv_header" type="text" value="' . esc_attr($header_name) . '" />';
+		$field .= '<p class="description">' . __('Enter the header name exactly as it appears in the CSV for this dimension\'s column.') . '</p>';
+		$field .= '</td>';
+		$field .= '</tr>';
+		
+		echo $field;
+		
+	}
+	
+	/**
+	 * Save custom term meta field
+	 *
+	 * @since	1.0.0
+	 * @param	int		$term_id	The current term ID.
+	 */
+	public function save_term_field($term_id) {
+		
+		update_term_meta(
+			$term_id,
+			'fourtwo_donor_list_csv_header',
+			sanitize_text_field($_POST['fourtwo_donor_list_csv_header'])
+		);
 		
 	}
 	
@@ -268,47 +308,58 @@ class FourTwo_Donors {
 		}
 		
 		$fields = array(
-            array(
-                'name'			=> 'fourtwo_donor_list_csv',
-                'label'			=> __('Donor List CSV'),
-                'type'			=> 'file',
-                'upload_button'	=> __('Choose File'),
-                'select_button'	=> __('Select File'),
-                'desc'			=> __('Select the CSV file containing the donor data for this donor list.'),
-                'class'			=> 'fourtwo-donor-list--csv',
-                'disabled'		=> false
-            ),
-            array(
-                'name'      => 'fourtwo_donor_list_filter_dimensions',
-                'label'     => __('Dimensions to Filter'),
-                'type'      => 'select',
-                'desc'      => __('Select the dimensions that will appear as filters for this donor list.'),
-                'class'     => 'fourtwo-donor-list--filter-dimensions fourtwo-donor-list--select',
-                'options'   => $dimensions,
-                'default'   => null,
-                'disabled'  => false,
-                'multiple'  => true
-            ),
-            array(
-                'name'      => 'fourtwo_donor_list_display_dimensions',
-                'label'     => __('Dimensions to Display'),
-                'type'      => 'select',
-                'desc'      => __('Select the dimensions that will appear as columns in the donor list data table.'),
-                'class'     => 'fourtwo-donor-list--display-dimensions fourtwo-donor-list--select',
-                'options'   => $dimensions,
-                'default'   => null,
-                'disabled'  => false,
-                'multiple'  => true
-            ),
-            array(
-                'name'      => 'fourtwo_donor_list_enable_search',
-                'label'     => __('Enable Donor Name Search'),
-                'type'      => 'checkbox',
-                'desc'      => __('Check this box to enable a search field above the donor list to allow visitors to search by donor name.'),
-                'class'     => 'fourtwo-donor-list--display-search fourtwo-donor-list--checkbox',
-                'disabled'  => false
-            ),
-        );
+			array(
+				'name'			=> 'fourtwo_donor_list_csv',
+				'label'			=> __('Donor List CSV'),
+				'type'			=> 'file',
+				'upload_button'	=> __('Choose File'),
+				'select_button'	=> __('Select File'),
+				'desc'			=> __('Select the CSV file containing the donor data for this donor list.'),
+				'class'			=> 'fourtwo-donor-list--csv',
+				'disabled'		=> false
+			),
+			array(
+				'name'      => 'fourtwo_donor_list_filter_dimensions',
+				'label'     => __('Dimensions to Filter'),
+				'type'      => 'select',
+				'desc'      => __('Select the dimensions that will appear as filters for this donor list.'),
+				'class'     => 'fourtwo-donor-list--filter-dimensions fourtwo-donor-list--select',
+				'options'   => $dimensions,
+				'default'   => null,
+				'disabled'  => false,
+				'multiple'  => true
+			),
+			array(
+				'name'      => 'fourtwo_donor_list_display_dimensions',
+				'label'     => __('Dimensions to Display'),
+				'type'      => 'select',
+				'desc'      => __('Select the dimensions that will appear as columns in the donor list data table.'),
+				'class'     => 'fourtwo-donor-list--display-dimensions fourtwo-donor-list--select',
+				'options'   => $dimensions,
+				'default'   => null,
+				'disabled'  => false,
+				'multiple'  => true
+			),
+			array(
+				'name'      => 'fourtwo_donor_list_enable_search',
+				'label'     => __('Enable Donor Name Search'),
+				'type'      => 'checkbox',
+				'desc'      => __('Check this box to enable a search field above the donor list to allow visitors to search by donor name.'),
+				'class'     => 'fourtwo-donor-list--display-search fourtwo-donor-list--checkbox',
+				'disabled'  => false
+			),
+			array(
+				'name'      => 'fourtwo_donor_list_name_dimensions',
+				'label'     => __('Name Dimension'),
+				'type'      => 'select',
+				'desc'      => __('Select the dimensions that contains the name of the donor.'),
+				'class'     => 'fourtwo-donor-list--name-dimensions fourtwo-donor-list--select',
+				'options'   => array_merge(array(null => ''	), $dimensions),
+				'default'   => null,
+				'disabled'  => false,
+				'multiple'  => false
+			)
+		);
 		
 		$args = array(
 	        'meta_box_id'   => 'fourtwo_donor_list_settings',
@@ -319,7 +370,7 @@ class FourTwo_Donors {
 	        'hook_priority' => 10,
 	        'fields'        => $fields
 	    );
-	
+	    
 	    mdc_meta_box($args);
 		
 	}

@@ -1,7 +1,11 @@
-.fourtwo-donor-list--select {
-	width: 100%;
-}
+.fourtwo-donor-list--select, #fourtwo_donor_list_settings .select2-container {
+	width: 100% !important;
+}    
 
 .term-slug-wrap, .term-description-wrap {
 	display: none !important;
+}
+
+#mdc_cmb_fieldset_fourtwo_donor_list_name_dimensions {
+	display: none;
 }
